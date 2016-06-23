@@ -1,3 +1,4 @@
+
 package com.seya.todoapp;
 
 import android.content.Intent;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
+    private static final int EDIT_REQUEST_CODE = 3017;
 
     private ArrayList<String> todoItems;
     private ArrayAdapter<String> aToDoAdapter;
@@ -56,7 +59,8 @@ public class MainActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
                 intent.putExtra("item", todoItems.get(position));
-                startActivity(intent);
+                intent.putExtra("position", position);
+                startActivityForResult(intent, EDIT_REQUEST_CODE);
             }
         });
     }
@@ -81,6 +85,16 @@ public class MainActivity extends AppCompatActivity {
         try {
             FileUtils.writeLines(file, todoItems);
         } catch (IOException e) {
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE) {
+            String item = data.getExtras().getString("item");
+            int position = data.getExtras().getInt("position");
+            todoItems.set(position, item);
+            writeItems();
         }
     }
 }
