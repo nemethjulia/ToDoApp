@@ -94,6 +94,7 @@ public class MainActivity extends AppCompatActivity {
             String item = data.getExtras().getString("item");
             int position = data.getExtras().getInt("position");
             todoItems.set(position, item);
+            aToDoAdapter.notifyDataSetChanged();
             writeItems();
         }
     }
