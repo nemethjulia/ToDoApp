@@ -1,5 +1,6 @@
 package com.seya.todoapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -48,6 +49,14 @@ public class MainActivity extends AppCompatActivity {
                 aToDoAdapter.notifyDataSetChanged();
                 writeItems();
                 return true;
+            }
+        });
+        lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
+                intent.putExtra("item", todoItems.get(position));
+                startActivity(intent);
             }
         });
     }
