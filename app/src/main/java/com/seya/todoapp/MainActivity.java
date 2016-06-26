@@ -10,25 +10,25 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import org.apache.commons.io.FileUtils;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import com.seya.todoapp.data.ToDo;
+import com.seya.todoapp.data.ToDosDatabaseHelper;
 
 public class MainActivity extends AppCompatActivity {
 
     private static final int EDIT_REQUEST_CODE = 3017;
 
-    private ArrayList<String> todoItems;
-    private ArrayAdapter<String> aToDoAdapter;
+    private ToDoAdapter aToDoAdapter;
     private ListView lvItems;
     private EditText etEditText;
+
+    private ToDosDatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        dbHelper = new ToDosDatabaseHelper(this);
 
         lvItems = (ListView) findViewById(R.id.lvItems);
         createTodoList();
@@ -36,21 +36,35 @@ public class MainActivity extends AppCompatActivity {
         etEditText = (EditText) findViewById(R.id.etEditText);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE) {
+            String item = data.getExtras().getString("item");
+            int position = data.getExtras().getInt("position");
+            ToDo toDo = aToDoAdapter.getItem(position);
+            toDo.text = item;
+            aToDoAdapter.notifyDataSetChanged();
+            dbHelper.updateTodo(toDo);
+        }
+    }
+
     public void onAddItem(View view) {
-        aToDoAdapter.add(etEditText.getText().toString());
+        ToDo toDo = new ToDo();
+        toDo.text = etEditText.getText().toString();
+        dbHelper.addToDo(toDo);
+        reloadData(); // to have all the Id-s
         etEditText.setText("");
-        writeItems();
     }
 
     private void createTodoList() {
-        populateArrayItems();
+        aToDoAdapter = new ToDoAdapter(this, dbHelper.getAllToDos());
         lvItems.setAdapter(aToDoAdapter);
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                todoItems.remove(position);
-                aToDoAdapter.notifyDataSetChanged();
-                writeItems();
+                ToDo toDo = aToDoAdapter.getItem(position);
+                dbHelper.remove(toDo);
+                aToDoAdapter.remove(toDo);
                 return true;
             }
         });
@@ -58,44 +72,15 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent = new Intent(MainActivity.this, EditItemActivity.class);
-                intent.putExtra("item", todoItems.get(position));
+                intent.putExtra("item", aToDoAdapter.getItem(position).text);
                 intent.putExtra("position", position);
                 startActivityForResult(intent, EDIT_REQUEST_CODE);
             }
         });
     }
 
-    private void populateArrayItems() {
-        readItems();
-        aToDoAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, todoItems);
-    }
-
-    private void readItems() {
-        File filesDir = getFilesDir();
-        File file = new File(filesDir, "todo.txt");
-        try {
-            todoItems = new ArrayList<>(FileUtils.readLines(file));
-        } catch (IOException e) {
-        }
-    }
-
-    private void writeItems() {
-        File filesDir = getFilesDir();
-        File file = new File(filesDir, "todo.txt");
-        try {
-            FileUtils.writeLines(file, todoItems);
-        } catch (IOException e) {
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE) {
-            String item = data.getExtras().getString("item");
-            int position = data.getExtras().getInt("position");
-            todoItems.set(position, item);
-            aToDoAdapter.notifyDataSetChanged();
-            writeItems();
-        }
+    private void reloadData() {
+        aToDoAdapter.clear();
+        aToDoAdapter.addAll(dbHelper.getAllToDos());
     }
 }
