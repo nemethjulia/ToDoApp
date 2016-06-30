@@ -9,9 +9,13 @@ import android.widget.TextView;
 
 import com.seya.todoapp.data.ToDo;
 
+import java.text.DateFormat;
 import java.util.List;
 
 public class ToDoAdapter extends ArrayAdapter<ToDo> {
+
+    private static final DateFormat dateFormat = DateFormat.getDateInstance();
+
     public ToDoAdapter(Context context, List<ToDo> toDos) {
         super(context, 0, toDos);
     }
@@ -28,6 +32,11 @@ public class ToDoAdapter extends ArrayAdapter<ToDo> {
         TextView tvText = (TextView) convertView.findViewById(R.id.tvText);
         // Populate the data into the template view using the data object
         tvText.setText(toDo.text);
+        // Lookup view for data population
+        TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
+        // Populate the data into the template view using the data object
+        tvDate.setText(toDo.dueDate == null ? "" : dateFormat.format(toDo.dueDate));
+
         // Return the completed view to render on screen
         return convertView;
     }

@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "todosDatabase";
-    private static final int DATABASE_VERSION = 1;
+    private static final int DATABASE_VERSION = 7;
 
     // Table Name
     private static final String TABLE_TODOS = "todos";
@@ -24,6 +25,9 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
     // TODO Table Columns
     private static final String KEY_TODO_ID = "id";
     private static final String KEY_TODO_TEXT = "text";
+    private static final String KEY_TODO_DUE_DATE = "due_date";
+
+    private static final DateFormat dateFormat = DateFormat.getDateInstance();
 
     public ToDosDatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -40,7 +44,8 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
         String CREATE_TODOS_TABLE = "CREATE TABLE " + TABLE_TODOS +
                 "(" +
                 KEY_TODO_ID + " INTEGER PRIMARY KEY," +
-                KEY_TODO_TEXT + " TEXT" +
+                KEY_TODO_TEXT + " TEXT," +
+                KEY_TODO_DUE_DATE + " TEXT" +
                 ")";
 
         db.execSQL(CREATE_TODOS_TABLE);
@@ -51,22 +56,6 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
         if (oldVersion != newVersion) {
             db.execSQL("DROP TABLE IF EXISTS " + TABLE_TODOS);
             onCreate(db);
-        }
-    }
-
-    public void addToDo(ToDo toDo) {
-        SQLiteDatabase db = getWritableDatabase();
-
-        db.beginTransaction();
-        try {
-            ContentValues values = new ContentValues();
-            values.put(KEY_TODO_TEXT, toDo.text);
-            db.insertOrThrow(TABLE_TODOS, null, values);
-            db.setTransactionSuccessful();
-        } catch (Exception e) {
-            Log.d(TAG, "Error while trying to add todo to database");
-        } finally {
-            db.endTransaction();
         }
     }
 
@@ -83,11 +72,13 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
                     ToDo newToDo = new ToDo();
                     newToDo.id = cursor.getInt(cursor.getColumnIndex(KEY_TODO_ID));
                     newToDo.text = cursor.getString(cursor.getColumnIndex(KEY_TODO_TEXT));
+                    String dateString = cursor.getString(cursor.getColumnIndex(KEY_TODO_DUE_DATE));
+                    newToDo.dueDate = dateString == null ? null : dateFormat.parse(dateString);
                     toDos.add(newToDo);
                 } while(cursor.moveToNext());
             }
         } catch (Exception e) {
-            Log.d(TAG, "Error while trying to get todos from database");
+            Log.d(TAG, "Error while trying to get todos from database " + e.getMessage());
         } finally {
             if (cursor != null && !cursor.isClosed()) {
                 cursor.close();
@@ -96,13 +87,28 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
         return toDos;
     }
 
-    public int updateTodo(ToDo toDo) {
-        SQLiteDatabase db = this.getWritableDatabase();
+    public void addOrUpdateTodo(ToDo toDo) {
+        SQLiteDatabase db = getWritableDatabase();
 
-        ContentValues values = new ContentValues();
-        values.put(KEY_TODO_TEXT, toDo.text);
+        db.beginTransaction();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(KEY_TODO_TEXT, toDo.text);
+            values.put(KEY_TODO_DUE_DATE, toDo.dueDate == null ? null : dateFormat.format(toDo.dueDate));
 
-        return db.update(TABLE_TODOS, values, KEY_TODO_ID + " = ?", new String[] { String.valueOf(toDo.id) });
+            // First try to update in case the item already exists in the database
+            int rows = db.update(TABLE_TODOS, values, KEY_TODO_ID + " = ?", new String[] { String.valueOf(toDo.id) });
+
+            // Check if update succeeded
+            if (rows != 1) {
+                db.insertOrThrow(TABLE_TODOS, null, values);
+            }
+            db.setTransactionSuccessful();
+        } catch (Exception e) {
+            Log.d(TAG, "Error while trying to add or update user");
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public void remove(ToDo toDo) {
