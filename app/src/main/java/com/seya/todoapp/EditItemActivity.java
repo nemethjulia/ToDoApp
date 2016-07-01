@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.seya.todoapp.data.ToDo;
 
@@ -48,19 +49,16 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
     }
 
     public void onSave(View view) throws ParseException {
-        toDo.text = etEditItem.getText().toString();
-        String dueDate = etDueDate.getText().toString();
-        if (!dueDate.equals("")) {
-            toDo.dueDate = dateFormat.parse(dueDate);
+        String text = etEditItem.getText().toString();
+        if (text.equals("")) {
+            Toast.makeText(this, "Can't save the todo without text!", Toast.LENGTH_SHORT).show();
         } else {
-            toDo.dueDate = null;
+            toDo.text = text;
+            Intent data = new Intent();
+            data.putExtra("todo", toDo);
+            setResult(RESULT_OK, data);
+            this.finish();
         }
-
-        Intent data = new Intent();
-        data.putExtra("todo", toDo);
-
-        setResult(RESULT_OK, data);
-        this.finish();
     }
 
     @Override
