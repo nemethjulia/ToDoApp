@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.seya.todoapp.MainActivity">
+    tools:context="com.seya.todoapp.MainActivity"
+    android:background="@color/colorLight">
 
     <Button
         android:layout_width="wrap_content"
@@ -17,7 +18,10 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:onClick="onCreateItem" />
+        android:onClick="onCreateItem"
+        android:background="@color/colorPrimary"
+        android:textColor="@color/colorLight"
+        android:padding="10dp"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -26,5 +30,7 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/btnCreateItem" />
+        android:layout_above="@+id/btnCreateItem"
+        android:divider="@color/colorPrimary"
+        android:dividerHeight="1dp"/>
 </RelativeLayout>
