@@ -35,7 +35,12 @@ public class ToDoAdapter extends ArrayAdapter<ToDo> {
         // Lookup view for data population
         TextView tvDate = (TextView) convertView.findViewById(R.id.tvDate);
         // Populate the data into the template view using the data object
-        tvDate.setText(toDo.dueDate == null ? "" : dateFormat.format(toDo.dueDate));
+        if (toDo.dueDate == null) {
+            tvDate.setText("");
+        } else {
+            tvDate.setText(dateFormat.format(toDo.dueDate));
+            DateColoringUtil.setDueDateColor(tvDate, toDo.dueDate);
+        }
 
         // Return the completed view to render on screen
         return convertView;

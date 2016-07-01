@@ -36,6 +36,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         etDueDate = (EditText) findViewById(R.id.etDueDate);
         if (toDo.dueDate != null) {
             etDueDate.setText(dateFormat.format(toDo.dueDate));
+            DateColoringUtil.setDueDateColor(etDueDate, toDo.dueDate);
         }
         etDueDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -69,5 +70,6 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         Date dueDate = calendar.getTime();
         toDo.dueDate = dueDate;
         etDueDate.setText(dateFormat.format(dueDate));
+        DateColoringUtil.setDueDateColor(etDueDate, dueDate);
     }
 }
