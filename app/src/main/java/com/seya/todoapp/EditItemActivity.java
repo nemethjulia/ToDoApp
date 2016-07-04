@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -17,6 +16,7 @@ import com.seya.todoapp.data.ToDo;
 
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -93,7 +93,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private void setPriority() {
         spPriority = (Spinner) findViewById(R.id.spPriority);
-        spPriority.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Priority.values()));
+        spPriority.setAdapter(new PriorityAdapter(this, Arrays.asList(Priority.values())));
         if (toDo.priority != null) {
             spPriority.setSelection(toDo.priority.getPriority());
         }
