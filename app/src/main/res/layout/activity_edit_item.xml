@@ -39,8 +39,13 @@
         android:id="@+id/etDueDate"
         android:padding="10dp"
         android:focusable="false"
-        android:textColor="@color/colorPrimary"
-        />
+        android:textColor="@color/colorPrimary" />
+
+    <Spinner
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/spPriority"
+        android:padding="10dp" />
 
     <Button
         android:layout_width="wrap_content"

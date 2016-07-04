@@ -7,4 +7,5 @@ public class ToDo implements Serializable {
     public int id;
     public String text;
     public Date dueDate;
+    public Priority priority;
 }

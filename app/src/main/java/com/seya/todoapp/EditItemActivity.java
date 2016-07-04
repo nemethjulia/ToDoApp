@@ -6,10 +6,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.seya.todoapp.data.Priority;
 import com.seya.todoapp.data.ToDo;
 
 import java.text.DateFormat;
@@ -23,30 +26,9 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private EditText etEditItem;
     private EditText etDueDate;
+    private Spinner spPriority;
 
     private ToDo toDo;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_item);
-        toDo = (ToDo) getIntent().getSerializableExtra("todo");
-        etEditItem = (EditText) findViewById(R.id.etEditItem);
-        etEditItem.setText(toDo.text);
-
-        etDueDate = (EditText) findViewById(R.id.etDueDate);
-        if (toDo.dueDate != null) {
-            etDueDate.setText(dateFormat.format(toDo.dueDate));
-            DateColoringUtil.setDueDateColor(etDueDate, toDo.dueDate);
-        }
-        etDueDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentManager fm = getSupportFragmentManager();
-                DatePickerFragment.newInstance(toDo.dueDate).show(fm, "tag");
-            }
-        });
-    }
 
     public void onSave(View view) throws ParseException {
         String text = etEditItem.getText().toString();
@@ -54,6 +36,7 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
             Toast.makeText(this, "Can't save the todo without text!", Toast.LENGTH_SHORT).show();
         } else {
             toDo.text = text;
+            toDo.priority = (Priority) spPriority.getSelectedItem();
             Intent data = new Intent();
             data.putExtra("todo", toDo);
             setResult(RESULT_OK, data);
@@ -69,5 +52,50 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
         toDo.dueDate = dueDate;
         etDueDate.setText(dateFormat.format(dueDate));
         DateColoringUtil.setDueDateColor(etDueDate, dueDate);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_item);
+        toDo = (ToDo) getIntent().getSerializableExtra("todo");
+        if (toDo == null) {
+            toDo = new ToDo();
+        }
+        setProperties();
+    }
+
+    private void setProperties() {
+        setText();
+        setDueDate();
+        setPriority();
+    }
+
+    private void setText() {
+        etEditItem = (EditText) findViewById(R.id.etEditItem);
+        etEditItem.setText(toDo.text);
+    }
+
+    private void setDueDate() {
+        etDueDate = (EditText) findViewById(R.id.etDueDate);
+        if (toDo.dueDate != null) {
+            etDueDate.setText(dateFormat.format(toDo.dueDate));
+            DateColoringUtil.setDueDateColor(etDueDate, toDo.dueDate);
+        }
+        etDueDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FragmentManager fm = getSupportFragmentManager();
+                DatePickerFragment.newInstance(toDo.dueDate).show(fm, "tag");
+            }
+        });
+    }
+
+    private void setPriority() {
+        spPriority = (Spinner) findViewById(R.id.spPriority);
+        spPriority.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, Priority.values()));
+        if (toDo.priority != null) {
+            spPriority.setSelection(toDo.priority.getPriority());
+        }
     }
 }

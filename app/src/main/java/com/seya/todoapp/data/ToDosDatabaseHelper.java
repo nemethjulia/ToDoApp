@@ -17,7 +17,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "todosDatabase";
-    private static final int DATABASE_VERSION = 7;
+    private static final int DATABASE_VERSION = 8;
 
     // Table Name
     private static final String TABLE_TODOS = "todos";
@@ -26,6 +26,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
     private static final String KEY_TODO_ID = "id";
     private static final String KEY_TODO_TEXT = "text";
     private static final String KEY_TODO_DUE_DATE = "due_date";
+    private static final String KEY_TODO_PRIORITY = "priority";
 
     private static final DateFormat dateFormat = DateFormat.getDateInstance();
 
@@ -45,7 +46,8 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
                 "(" +
                 KEY_TODO_ID + " INTEGER PRIMARY KEY," +
                 KEY_TODO_TEXT + " TEXT," +
-                KEY_TODO_DUE_DATE + " TEXT" +
+                KEY_TODO_DUE_DATE + " TEXT," +
+                KEY_TODO_PRIORITY + " INTEGER" +
                 ")";
 
         db.execSQL(CREATE_TODOS_TABLE);
@@ -74,6 +76,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
                     newToDo.text = cursor.getString(cursor.getColumnIndex(KEY_TODO_TEXT));
                     String dateString = cursor.getString(cursor.getColumnIndex(KEY_TODO_DUE_DATE));
                     newToDo.dueDate = dateString == null ? null : dateFormat.parse(dateString);
+                    newToDo.priority = Priority.getPriority(cursor.getInt(cursor.getColumnIndex(KEY_TODO_PRIORITY)));
                     toDos.add(newToDo);
                 } while(cursor.moveToNext());
             }
@@ -95,6 +98,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
             ContentValues values = new ContentValues();
             values.put(KEY_TODO_TEXT, toDo.text);
             values.put(KEY_TODO_DUE_DATE, toDo.dueDate == null ? null : dateFormat.format(toDo.dueDate));
+            values.put(KEY_TODO_PRIORITY, toDo.priority == null ? -1 : toDo.priority.getPriority());
 
             // First try to update in case the item already exists in the database
             int rows = db.update(TABLE_TODOS, values, KEY_TODO_ID + " = ?", new String[] { String.valueOf(toDo.id) });
@@ -105,7 +109,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
             }
             db.setTransactionSuccessful();
         } catch (Exception e) {
-            Log.d(TAG, "Error while trying to add or update user");
+            Log.d(TAG, "Error while trying to add or update todo: " + e.getMessage());
         } finally {
             db.endTransaction();
         }
