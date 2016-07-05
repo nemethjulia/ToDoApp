@@ -24,18 +24,20 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private static final DateFormat dateFormat = DateFormat.getDateInstance();
 
-    private EditText etEditItem;
+    private EditText etText;
+    private EditText etDescription;
     private EditText etDueDate;
     private Spinner spPriority;
 
     private ToDo toDo;
 
     public void onSave(View view) throws ParseException {
-        String text = etEditItem.getText().toString();
+        String text = etText.getText().toString();
         if (text.equals("")) {
             Toast.makeText(this, "Can't save the todo without text!", Toast.LENGTH_SHORT).show();
         } else {
             toDo.text = text;
+            toDo.description = etDescription.getText().toString();
             toDo.priority = (Priority) spPriority.getSelectedItem();
             Intent data = new Intent();
             data.putExtra("todo", toDo);
@@ -67,13 +69,19 @@ public class EditItemActivity extends AppCompatActivity implements DatePickerDia
 
     private void setProperties() {
         setText();
+        setDescription();
         setDueDate();
         setPriority();
     }
 
     private void setText() {
-        etEditItem = (EditText) findViewById(R.id.etEditItem);
-        etEditItem.setText(toDo.text);
+        etText = (EditText) findViewById(R.id.etText);
+        etText.setText(toDo.text);
+    }
+
+    private void setDescription() {
+        etDescription = (EditText) findViewById(R.id.etDescription);
+        etDescription.setText(toDo.description);
     }
 
     private void setDueDate() {

@@ -25,7 +25,7 @@ The following **optional** features are implemented:
 
 The following **additional** features are implemented:
 * [x] order by priority then due date
-* [ ] description for todos
+* [x] description for todos
 
 ## Video Walkthrough 
 

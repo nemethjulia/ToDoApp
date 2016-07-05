@@ -17,7 +17,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
 
     // Database Info
     private static final String DATABASE_NAME = "todosDatabase";
-    private static final int DATABASE_VERSION = 8;
+    private static final int DATABASE_VERSION = 9;
 
     // Table Name
     private static final String TABLE_TODOS = "todos";
@@ -25,6 +25,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
     // TODO Table Columns
     private static final String KEY_TODO_ID = "id";
     private static final String KEY_TODO_TEXT = "text";
+    private static final String KEY_TODO_DESCRIPTION = "description";
     private static final String KEY_TODO_DUE_DATE = "due_date";
     private static final String KEY_TODO_PRIORITY = "priority";
 
@@ -46,6 +47,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
                 "(" +
                 KEY_TODO_ID + " INTEGER PRIMARY KEY," +
                 KEY_TODO_TEXT + " TEXT," +
+                KEY_TODO_DESCRIPTION + " TEXT," +
                 KEY_TODO_DUE_DATE + " TEXT," +
                 KEY_TODO_PRIORITY + " INTEGER" +
                 ")";
@@ -74,6 +76,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
                     ToDo newToDo = new ToDo();
                     newToDo.id = cursor.getInt(cursor.getColumnIndex(KEY_TODO_ID));
                     newToDo.text = cursor.getString(cursor.getColumnIndex(KEY_TODO_TEXT));
+                    newToDo.description = cursor.getString(cursor.getColumnIndex(KEY_TODO_DESCRIPTION));
                     String dateString = cursor.getString(cursor.getColumnIndex(KEY_TODO_DUE_DATE));
                     newToDo.dueDate = dateString == null ? null : dateFormat.parse(dateString);
                     newToDo.priority = Priority.getPriority(cursor.getInt(cursor.getColumnIndex(KEY_TODO_PRIORITY)));
@@ -97,6 +100,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
         try {
             ContentValues values = new ContentValues();
             values.put(KEY_TODO_TEXT, toDo.text);
+            values.put(KEY_TODO_DESCRIPTION, toDo.description);
             values.put(KEY_TODO_DUE_DATE, toDo.dueDate == null ? null : dateFormat.format(toDo.dueDate));
             values.put(KEY_TODO_PRIORITY, toDo.priority == null ? -1 : toDo.priority.getPriority());
 
