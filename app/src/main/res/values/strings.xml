@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">ToDoApp</string>
     <string name="create">Create new item</string>
-    <string name="edit_below_label">Edit Item Below</string>
+    <string name="edit_below_label">Edit ToDo Below</string>
     <string name="save">Save</string>
     <string name="button_refresh">Refresh</string>
+
+    <string name="todo_text">Text: </string>
+    <string name="todo_due_date">Due Date: </string>
+    <string name="todo_priority">Priority: </string>
 </resources>

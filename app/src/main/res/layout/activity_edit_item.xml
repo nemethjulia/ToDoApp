@@ -21,31 +21,88 @@
         android:textStyle="bold"
         android:textColor="@color/colorPrimaryDark" />
 
-    <EditText
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="textMultiLine"
-        android:ems="10"
-        android:id="@+id/etEditItem"
-        android:layout_gravity="start|center_vertical"
-        android:padding="10dp"
-        android:textColor="@color/colorPrimary" />
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal" />
 
-    <EditText
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:inputType="date"
-        android:ems="10"
-        android:id="@+id/etDueDate"
-        android:padding="10dp"
-        android:focusable="false"
-        android:textColor="@color/colorPrimary" />
+        android:layout_height="wrap_content">
 
-    <Spinner
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/todo_text"
+            android:id="@+id/textView"
+            android:layout_gravity="start|center_vertical"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/etEditItem"
+            android:layout_gravity="center_vertical|end"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimary" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/todo_due_date"
+            android:id="@+id/tvDueDate"
+            android:layout_gravity="start|center_vertical"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimary" />
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/etDueDate"
+            android:padding="10dp"
+            android:focusable="false"
+            android:textColor="@color/colorPrimary" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/spPriority"
-        android:padding="10dp" />
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="@string/todo_priority"
+            android:id="@+id/tvPriority"
+            android:layout_gravity="center"
+            android:padding="10dp"
+            android:textColor="@color/colorPrimary" />
+
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/spPriority"
+            android:layout_gravity="center"
+            android:padding="10dp" />
+
+    </LinearLayout>
 
     <Button
         android:layout_width="wrap_content"
