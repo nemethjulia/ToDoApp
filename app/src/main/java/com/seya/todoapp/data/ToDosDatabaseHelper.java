@@ -64,7 +64,7 @@ public class ToDosDatabaseHelper extends SQLiteOpenHelper {
     public List<ToDo> getAllToDos() {
         List<ToDo> toDos = new ArrayList<>();
 
-        String TODOS_SELECT_QUERY = String.format("SELECT * FROM %s", TABLE_TODOS);
+        String TODOS_SELECT_QUERY = String.format("SELECT * FROM %s ORDER BY %s DESC, %s", TABLE_TODOS, KEY_TODO_PRIORITY, KEY_TODO_DUE_DATE);
 
         SQLiteDatabase db = getReadableDatabase();
         Cursor cursor = db.rawQuery(TODOS_SELECT_QUERY, null);
