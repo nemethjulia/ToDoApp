@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.seya.todoapp.data.Priority;
 import com.seya.todoapp.data.ToDo;
 
 import java.text.DateFormat;
@@ -28,6 +29,7 @@ public class ToDoAdapter extends ArrayAdapter<ToDo> {
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.item_todo, parent, false);
         }
+        convertView.setBackgroundResource(getColor(toDo.priority));
         // Lookup view for data population
         TextView tvText = (TextView) convertView.findViewById(R.id.tvText);
         // Populate the data into the template view using the data object
@@ -44,5 +46,18 @@ public class ToDoAdapter extends ArrayAdapter<ToDo> {
 
         // Return the completed view to render on screen
         return convertView;
+    }
+
+    private int getColor(Priority priority) {
+        switch (priority) {
+            case LOW:
+                return R.color.colorLOW;
+            case MEDIUM:
+                return R.color.colorMEDUM;
+            case HIGH:
+                return R.color.colorHIGH;
+            default:
+                return R.color.colorTransparent;
+        }
     }
 }

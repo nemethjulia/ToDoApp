@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF6400FF</color>
+    <color name="colorPrimary">#6400FF</color>
     <color name="colorPrimaryDark">@color/colorPrimary</color>
     <color name="colorAccent">@color/colorPrimary</color>
     <color name="colorLight">#F0DDFF</color>
     <color name="colorRed">#FF0000</color>
+    <color name="colorHIGH">#FFA0A0</color>
+    <color name="colorMEDUM">#FFFFA0</color>
+    <color name="colorLOW">#A0FFA0</color>
+    <color name="colorTransparent">#00000000</color>
     <color name="colorControlNormal">@color/colorPrimary</color>
     <color name="colorControlActivated">@color/colorPrimary</color>
     <color name="colorControlHighlight">@color/colorPrimary</color>
