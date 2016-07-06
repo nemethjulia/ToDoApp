@@ -26,6 +26,7 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 * [x] order by priority then due date
 * [x] description for todos
+* [x] changing the icon of the app
 
 ## Video Walkthrough 
 
