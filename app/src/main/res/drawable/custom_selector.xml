@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+    <item
+        android:state_selected="true"
+        android:state_checked="true"
+        android:state_focused="false"
+        android:state_pressed="false"
+        android:drawable="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <item android:state_focused="true"
+        android:state_pressed="true"
+        android:drawable="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <item android:state_focused="false"
+        android:state_pressed="true"
+        android:drawable="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <item android:state_selected="true"
+        android:drawable="@color/colorPrimary"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <item android:drawable="@color/colorLight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+</selector>
